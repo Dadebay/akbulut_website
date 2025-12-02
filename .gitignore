@@ -1,0 +1,44 @@
+/.phpunit.cache
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/public/images
+/storage/*.key
+/vendor
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+/.fleet
+/.idea
+/.vscode
+
+# macOS
+.DS_Store
+
+# Large PDF files (keep only in production, not in git)
+/public/files/akbulut_barada_ru.pdf
+/public/files/akbulut_barada_tm.pdf
+/public/files/akbulut_barada_en.pdf
+/public/files/iso.pdf
+/public/files/appendix.pdf
+
+# Source maps
+*.map
+
+# Test files
+/public/test.php
+/public/simple-test.php
+/public/lib.php
+/public/gas.html
+/public/googlefca6f0b571c8d1af.html
+/public/construction/
+
+# Storage
+/storage/logs/*.log

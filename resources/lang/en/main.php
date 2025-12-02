@@ -1,0 +1,75 @@
+<?php
+
+return [
+    'categories' => 'Categories',
+    'products' => 'Products',
+    'main_page'=>'Home',
+    'back'=>'Back',
+    'mobile_app'=>'Mobile App',
+    'calculator'=>'Calculator',
+    'pages'=>'Pages',
+    'height'=>'height(meter)',
+    'width'=>'width(meter)',
+    'meter'=>'meter',
+        'mobile_app_text'=>'Available on AppStore and GooglePlay',
+    'about_us'=>'About Us',
+    'news'=>'News',
+    'head_office'=>'Head Office and Showroom',
+    'contact_us'=>'Contact Us',
+    'Calculator'=>'Calculator',
+    'calc'=>'Calculate',
+    'contact_us_header'=>'Contact us',
+    'send'=>'Send',
+    'name'=>'Name',
+    'name_required'=>'please enter name!',
+    'phone_required'=>'please enter phone number!',
+    'body_required'=>'please enter message',
+    'phone'=>'Phone',
+    'type_message'=>'Type message here...',
+    'loading'=>'loading...',
+    'read_more'=>'Read More',
+    'message_sent'=>'Your message has been sent successfully',
+    'lay-in'=>'Lay-in',
+    'clip-in'=>'Clip-in',
+    'vinil'=>'Vinyl ceiling',
+    'privacy'=>'Privacy policy',
+    'aboutAkbulut'=>'About ES "Ak Bulut"',
+    'iso_certificate'=>'ISO Certificate',
+    'appendix'=>'Annex',
+    
+    // Anniversary Page
+    'years'=>'Years',
+    'years_of_excellence'=>'Years of Excellence',
+    'employees'=>'Employees',
+    'countries'=>'Countries',
+    'products'=>'Products',
+    'years_of_stability'=>'Years of Stability in Production and Working Processes',
+    'countries_in_export'=>'Countries in Export',
+    
+    'company_founded'=>'Company Founded',
+    'company_founded_desc'=>'ES "Ak Bulut" was established with a vision to become a leading manufacturer in Turkmenistan.',
+    
+    'suspended_ceilings_factory'=>'Opening the Factory of Suspended Ceilings Production',
+    'suspended_ceilings_factory_desc'=>'First in Turkmenistan and region to establish a state-of-the-art suspended ceilings production facility.',
+    
+    'production_capacity_expansion'=>'Production Capacity Expansion',
+    'production_capacity_expansion_desc'=>'Significant increase in production capacity to meet growing market demand and establish market leadership.',
+    
+    'new_production_line'=>'New Production Line Launch',
+    'new_production_line_desc'=>'Introduction of advanced production line with cutting-edge technology to diversify our product portfolio.',
+    
+    'international_expansion'=>'International Expansion',
+    'international_expansion_desc'=>'Strategic international partnerships and participation in global exhibitions, establishing our presence in international markets.',
+    
+    'export_covid'=>'Export Success During COVID-19',
+    'export_covid_desc'=>'Despite global challenges, maintained strong export operations and continued serving international markets during the pandemic.',
+    
+    'new_factory_plasterboard'=>'New Factory Opening',
+    'new_factory_plasterboard_desc'=>'Launch of new production facility for plasterboard and dry construction mixes, expanding our product range and capabilities.',
+    
+    'new_export_countries'=>'New Countries in Export Market',
+    'new_export_countries_desc'=>'Expanded our export reach to new international markets, strengthening our global presence and partnerships.',
+    
+    'anniversary_milestone'=>'10th Anniversary Milestone',
+    'anniversary_milestone_desc'=>'Celebrating 10 years of excellence with more than 500 employees, presence in over 10 countries, and participation in numerous international exhibitions and forums.',
+];
