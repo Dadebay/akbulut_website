@@ -37,6 +37,14 @@ return [
     'aboutAkbulut'=>'"Ak bulut" hojalyk jemgyýeti barada',
     'iso_certificate'=>'ISO sertifikat',
     'appendix'=>'Goşundy',
+    'turkmen_gips'=>'Türkmen Gips',
+    'turkmen_gips_title'=>'TÄZE "TÜRKMEN GIPS" ZAWODY',
+    'turkmen_gips_subtitle'=>'"AK BULUT" HJ WE TÜRKMENISTANYŇ SENAGAT WE GURLUŞYK ÖNÜMÇILIGI MINISTRLIGINIŇ BILELIKDE DÖREDILEN KÄRHANASY.',
+    'turkmen_gips_capacity'=>'ÝYLLYK ÖNDÜRIŞ KUWWATLYLYGY',
+    'turkmen_gips_capacity_1'=>'250,000 tonna gury gurluşyk garyndylary',
+    'turkmen_gips_capacity_2'=>'20 million inedördül metr gipsokarton',
+    'turkmen_gips_equipment'=>'IŇ TÄZE ÝEWROPA ENJAMLARY WE TEHNOLOGIÝASY.',
+    'turkmen_gips_opening'=>'2026-njy ÝYLDA AÇYLÝAR.',
     
     // Anniversary Page
     'years'=>'Ýyl',

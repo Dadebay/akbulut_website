@@ -41,6 +41,13 @@
             aspect-ratio: 16/7;
         }
 
+        .static-banner-padding {
+            width: 80% !important;
+            height:80%;
+            object-fit: contain !important;
+            margin: 0 auto;
+            display: block;
+        }
 
     </style>
 

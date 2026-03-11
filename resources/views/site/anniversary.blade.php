@@ -151,7 +151,7 @@
         letter-spacing: 4px;
     }
 
-    /* Enhanced Particles */
+    /* Enhanced Particles - Stars and Circles Only */
     .particles {
         position: absolute;
         width: 100%;
@@ -164,21 +164,71 @@
 
     .particle {
         position: absolute;
-        border-radius: 50%;
         animation: floatParticle 20s infinite;
+    }
+
+    /* Star Shape - Gold */
+    .particle:nth-child(4n+1) {
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-bottom: 8px solid var(--accent-color);
+        position: relative;
+        filter: drop-shadow(0 0 3px var(--accent-color));
+    }
+    
+    .particle:nth-child(4n+1)::before {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: -5px;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 8px solid var(--accent-color);
+    }
+
+    /* Star Shape - White */
+    .particle:nth-child(4n+3) {
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-bottom: 8px solid rgba(255, 255, 255, 0.9);
+        position: relative;
+        filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.6));
+    }
+    
+    .particle:nth-child(4n+3)::before {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: -5px;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 8px solid rgba(255, 255, 255, 0.9);
+    }
+
+    /* Circle Shape - Gold */
+    .particle:nth-child(4n+2) {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
         filter: blur(1px);
     }
 
-    .particle:nth-child(odd) {
-        background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+    /* Circle Shape - White */
+    .particle:nth-child(4n) {
         width: 6px;
         height: 6px;
-    }
-
-    .particle:nth-child(even) {
+        border-radius: 50%;
         background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
-        width: 4px;
-        height: 4px;
+        filter: blur(1px);
     }
 
     @keyframes floatParticle {
@@ -387,7 +437,6 @@
         height: 40px;
         background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-glow) 100%);
         border-radius: 50%;
-        border: 6px solid var(--bg-dark);
         z-index: 10;
         box-shadow: 
             0 0 30px var(--accent-color),

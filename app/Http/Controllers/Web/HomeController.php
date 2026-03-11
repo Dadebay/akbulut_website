@@ -128,4 +128,10 @@ class HomeController extends Controller
     {
         return view('site.anniversary');
     }
+
+    public function turkmenGips()
+    {
+        return view('site.turkmen_gips');
+    }
 }
+

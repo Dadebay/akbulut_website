@@ -36,6 +36,14 @@ return [
     'aboutAkbulut'=>'О компании ХО "Ак булут"',
     'iso_certificate'=>'Сертификат ISO',
     'appendix'=>'Приложение',
+    'turkmen_gips'=>'Туркмен Гипс',
+    'turkmen_gips_title'=>'НОВЫЙ ЗАВОД "ТУРКМЕН ГИПС"',
+    'turkmen_gips_subtitle'=>'СОВМЕСТНЫЙ ПРОЕКТ ХО "АК БУЛУТ" И МИНИСТЕРСТВА ПРОМЫШЛЕННОСТИ И СТРОИТЕЛЬНОГО ПРОИЗВОДСТВА ТУРКМЕНИСТАНА.',
+    'turkmen_gips_capacity'=>'ПРОИЗВОДСТВЕННАЯ МОЩНОСТЬ В ГОД',
+    'turkmen_gips_capacity_1'=>'250 000 тонн сухих строительных смесей',
+    'turkmen_gips_capacity_2'=>'20 миллионов квадратных метров гипсокартона',
+    'turkmen_gips_equipment'=>'НОВЕЙШЕЕ ЕВРОПЕЙСКОЕ ОБОРУДОВАНИЕ И ТЕХНОЛОГИИ',
+    'turkmen_gips_opening'=>'ОТКРЫТИЕ В 2026 ГОДУ.',
     
     // Anniversary Page
     'years'=>'Лет',

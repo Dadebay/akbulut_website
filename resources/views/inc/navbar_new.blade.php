@@ -3,12 +3,13 @@
         <div class="container-fluid container-lg">
 
           <a class="navbar-brand" href="{{route('web.home')}}">
-            
-            
-            
-                     <img class="logo" src="{{asset('images/akbulut_tk.png')}}" alt="Akbulut">
-              
-            
+            @if (LaravelLocalization::getCurrentLocale() == 'ru')
+              <img class="logo" src="{{asset('images/akbulut_ru.png')}}" alt="Akbulut">
+            @elseif(LaravelLocalization::getCurrentLocale() == 'en')
+              <img class="logo" src="{{asset('images/akbulut_en.png')}}" alt="Akbulut">
+            @else
+              <img class="logo" src="{{asset('images/akbulut_tk.png')}}" alt="Akbulut">
+            @endif
           </a>
 
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +21,10 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link {{ request()->is('turkmen-gips*') ? 'navbar_active' : '' }} mx-2 px-3" href="{{route('turkmen.gips')}}">@lang('main.turkmen_gips')</a>
+              </li>
+
               <li class="nav-item">
                 <a class="nav-link {{ request()->is('welcome*') ? 'navbar_active' : '' }} mx-2 px-3" href="{{route('web.welcome')}}">@lang('main.main_page')</a>
               </li>

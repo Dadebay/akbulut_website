@@ -14,12 +14,33 @@
             @foreach ($sliders ?? [] as $slider)
             @php
                 $slider = is_array($slider) ? (object)$slider : $slider;
-                $sliderPhoto = $slider->photo ?? asset('images/placeholder.jpg');
+                $backendPhoto = $slider->photo ?? '';
+                $isStaticImage = false;
+                
+                // Check if this is the specific banner that needs language variants (ID 770)
+                // Only this banner uses static images for EN/RU, others use backend photos
+                if (str_contains($backendPhoto, 'home_sliders/770')) {
+                    // This is the main banner - use language-specific static images
+                    if (LaravelLocalization::getCurrentLocale() == 'ru') {
+                        $sliderPhoto = asset('images/akbulut_ru.png');
+                        $isStaticImage = true;
+                    } elseif (LaravelLocalization::getCurrentLocale() == 'en') {
+                        $sliderPhoto = asset('images/akbulut_en.png');
+                        $isStaticImage = true;
+                    } else {
+                        // For Turkmen, use the backend photo
+                        $sliderPhoto = $backendPhoto ?: asset('images/akbulut_tk.png');
+                    }
+                } else {
+                    // For all other banners, always use the backend photo regardless of language
+                    $sliderPhoto = $backendPhoto ?: asset('images/placeholder.jpg');
+                }
+                
                 $sliderCaption = $slider->caption ?? '';
             @endphp
             @if($sliderPhoto)
                 <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                    <img src="{{ $sliderPhoto }}" class="d-block w-100" alt="{{ $sliderCaption }}">
+                    <img src="{{ $sliderPhoto }}" class="d-block w-100 {{ $isStaticImage ? 'static-banner-padding' : '' }}" alt="{{ $sliderCaption }}">
                     @if($sliderCaption)
                     <div class="carousel-caption d-none d-md-block">
                         <h5>{{ $sliderCaption }}</h5>

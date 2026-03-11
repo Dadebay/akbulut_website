@@ -36,6 +36,14 @@ return [
     'aboutAkbulut'=>'About ES "Ak Bulut"',
     'iso_certificate'=>'ISO Certificate',
     'appendix'=>'Annex',
+    'turkmen_gips'=>'Turkmen Gips',
+    'turkmen_gips_title'=>'NEW "TURKMEN GIPS" PLANT',
+    'turkmen_gips_subtitle'=>'A JOINT PROJECT OF ES "AK BULUT" AND THE MINISTRY OF INDUSTRY AND CONSTRUCTION PRODUCTION OF TURKMENISTAN.',
+    'turkmen_gips_capacity'=>'ANNUAL PRODUCTION CAPACITY',
+    'turkmen_gips_capacity_1'=>'250,000 tons of dry construction mixes',
+    'turkmen_gips_capacity_2'=>'20 million square meters of gypsum board',
+    'turkmen_gips_equipment'=>'LATEST EUROPEAN EQUIPMENT AND TECHNOLOGY',
+    'turkmen_gips_opening'=>'OPENING IN 2026.',
     
     // Anniversary Page
     'years'=>'Years',
