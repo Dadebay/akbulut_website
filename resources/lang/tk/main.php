@@ -2,6 +2,9 @@
 
 return [
     'categories' => 'Kategoriýalar',
+    'categories_subtitle' => 'Giň we hilli önümler toplumyny öwreniň',
+    'latest_news' => 'Soňky habarlar',
+    'all_news' => 'Ähli habarlar',
     'products' => 'Önümler',
     'main_page'=>'Esasy Sahypa',
     'back'=>'Yza',
@@ -30,6 +33,7 @@ return [
     'loading'=>'ýüklenyar...',
      'read_more'=>'Dowamy',
     'message_sent'=>'habaryňyz üstünlikli iberildi',
+    'contact_24h'=>'24 sagadyň dowamynda siziň bilen habarlaşarys.',
      'lay-in'=>'Laý-in',
     'clip-in'=>'Klip-in',
     'vinil'=>'Winil örtükli potolok',

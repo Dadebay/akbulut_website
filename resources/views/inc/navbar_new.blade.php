@@ -1,78 +1,136 @@
-<header>
-    <nav class="navbar navbar-expand-lg header-nav mx-auto">
-        <div class="container-fluid container-lg">
+@php use Illuminate\Support\Str; @endphp
+@php
+  $navLinks = [
+    [
+      'label' => trans('main.turkmen_gips'),
+      'href' => route('turkmen.gips'),
+      'pattern' => '*/turkmen-gips*',
+    ],
+    [
+      'label' => trans('main.main_page'),
+      'href' => route('web.welcome'),
+      'pattern' => '*/welcome*',
+    ],
+    [
+      'label' => trans('main.products'),
+      'href' => route('category.products'),
+      'pattern' => '*/products*',
+    ],
+    [
+      'label' => trans('main.news'),
+      'href' => route('web.allnews'),
+      'pattern' => '*/news*',
+    ],
+    [
+      'label' => trans('main.calculator'),
+      'href' => '#',
+      'pattern' => null,
+      'variant' => 'ghost',
+      'attrs' => 'id="calcNavBtn" data-calc-trigger="1"',
+    ],
+    [
+      'label' => trans('main.about_us'),
+      'href' => route('about_us'),
+      'pattern' => '*/about_us*',
+    ],
+    [
+      'label' => trans('main.privacy'),
+      'href' => route('web.privacy'),
+      'pattern' => '*/privacy*',
+    ],
+    [
+      'label' => trans('main.contact_us'),
+      'href' => route('web.welcome') . '#contact',
+      'pattern' => null,
+      'variant' => 'cta',
+    ],
+  ];
 
-          <a class="navbar-brand" href="{{route('web.home')}}">
-            @if (LaravelLocalization::getCurrentLocale() == 'ru')
-              <img class="logo" src="{{asset('images/akbulut_ru.png')}}" alt="Akbulut">
-            @elseif(LaravelLocalization::getCurrentLocale() == 'en')
-              <img class="logo" src="{{asset('images/akbulut_en.png')}}" alt="Akbulut">
-            @else
-              <img class="logo" src="{{asset('images/akbulut_tk.png')}}" alt="Akbulut">
-            @endif
-          </a>
+  $supportedLocales = LaravelLocalization::getSupportedLocales();
+  $currentLocale = LaravelLocalization::getCurrentLocale();
+  $flagMap = [
+    'ru' => asset('images/ru.svg'),
+    'en' => asset('images/us.svg'),
+    'tk' => asset('images/tm.svg'),
+  ];
+  $currentFlag = $flagMap[$currentLocale] ?? $flagMap['en'];
+  $currentLanguage = Str::ucfirst($supportedLocales[$currentLocale]['native'] ?? strtoupper($currentLocale));
+@endphp
 
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            <span class="navbar-toggler-icon"></span>
-            <span class="navbar-toggler-icon"></span>
-          </button>
+<header class="sn-header">
+  <nav class="navbar navbar-expand-lg sn-nav">
+    <div class="container-fluid sn-inner">
 
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link {{ request()->is('turkmen-gips*') ? 'navbar_active' : '' }} mx-2 px-3" href="{{route('turkmen.gips')}}">@lang('main.turkmen_gips')</a>
-              </li>
+      {{-- Logo --}}
+      <a class="navbar-brand sn-logo" href="{{ route('web.home') }}">
+        @if ($currentLocale == 'ru')
+          <img src="{{ asset('images/akbulut_ru.png') }}" alt="Akbulut">
+        @elseif($currentLocale == 'en')
+          <img src="{{ asset('images/akbulut_en.png') }}" alt="Akbulut">
+        @else
+          <img src="{{ asset('images/akbulut_tk.png') }}" alt="Akbulut">
+        @endif
+      </a>
 
-              <li class="nav-item">
-                <a class="nav-link {{ request()->is('welcome*') ? 'navbar_active' : '' }} mx-2 px-3" href="{{route('web.welcome')}}">@lang('main.main_page')</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link {{ request()->is('about_us*') ? 'navbar_active' : '' }}  mx-2 px-3" aria-current="page" href="{{route('about_us')}}">@lang('main.about_us')</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link {{ request()->is('products*') ? 'navbar_active' : '' }}  mx-2 px-3" href="{{route('category.products')}}">@lang('main.products')</a>
-              </li>
+      {{-- Mobile toggle --}}
+      <button class="navbar-toggler sn-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#snMenu" aria-controls="snMenu" aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
 
-              <li class="nav-item">
-                <a class="nav-link {{ request()->is('news*') ? 'navbar_active' : '' }} mx-2 px-3" href="{{route('web.allnews')}}">@lang('main.news')</a>
-              </li>
+      {{-- Collapsible area --}}
+      <div class="collapse navbar-collapse" id="snMenu">
+        <div class="sn-collapse">
 
-              <li class="nav-item">
-                <a class="nav-link mx-2 px-3 calculator_nav" href="{{route('web.welcome')}}#calculator">@lang('main.calculator')</a>
-              </li>
-
-              <li class="nav-item" style="margin-right: 1rem;">
-                <a class="nav-link mx-2 px-3 contact_btn_nav" href="{{route('web.welcome')}}#contact">@lang('main.contact_us')</a>
-              </li>
-            </ul>
-          
-            <ul class="navbar-nav ml-auto" style="border-left: 2px solid #0a529e;">
-                <div class="dropdown">
-                    <a class="link-dark text-decoration-none d-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                      @if (LaravelLocalization::getCurrentLocale() == 'ru')
-                      <img src="{{asset('images/ru.svg')}}" width="32" alt="Russian">
-                          
-                      @elseif(LaravelLocalization::getCurrentLocale() == 'tk')
-                      <img src="{{asset('images/tm.svg')}}" width="32" alt="Turkmen">
-                      @else
-                      <img src="{{asset('images/us.svg')}}" width="32" alt="English">
-                      
-                      @endif
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                      @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
-                        <a rel="alternate" class="dropdown-item" hreflang="{{ $localeCode }}" href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
-                          {{ $properties['native'] }}
-                        </a>
-                      @endforeach
-            
-                    </div>
-                  </div>
-                
-            </ul>
+          {{-- Nav links --}}
+          <div class="sn-links">
+            @foreach($navLinks as $link)
+              @php
+                $isActive = $link['pattern'] ? request()->is($link['pattern']) : false;
+                $variant  = $link['variant'] ?? 'default';
+                $extraAttrs = $link['attrs'] ?? '';
+              @endphp
+              <a href="{{ $link['href'] }}"
+                 class="sn-link sn-link--{{ $variant }}{{ $isActive ? ' sn-link--active' : '' }}"
+                 {!! $extraAttrs !!}>
+                {{ $link['label'] }}
+                @if ($isActive && $variant === 'default')<span class="sn-active-dot"></span>@endif
+              </a>
+            @endforeach
           </div>
-        </div>
-      </nav>
+
+          {{-- Language picker --}}
+          <details class="sn-lang">
+            <summary>
+              <span class="sn-lang-pill">
+                <img src="{{ $currentFlag }}" alt="{{ $currentLanguage }}" width="24" height="17">
+                <span class="sn-lang-name">{{ $currentLanguage }}</span>
+                <svg class="sn-lang-caret" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                  <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </summary>
+            <div class="sn-lang-panel">
+              <p class="sn-lang-heading">{{ __('Select language') }}</p>
+              @foreach($supportedLocales as $localeCode => $properties)
+                @php $panelFlag = $flagMap[$localeCode] ?? $flagMap['en']; @endphp
+                <a rel="alternate" hreflang="{{ $localeCode }}"
+                   href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}"
+                   class="sn-lang-option{{ $localeCode === $currentLocale ? ' sn-lang-option--active' : '' }}">
+                  <span class="sn-lang-opt-left">
+                    <img src="{{ $panelFlag }}" alt="{{ Str::ucfirst($properties['native']) }}" width="22" height="16">
+                    <span>{{ Str::ucfirst($properties['native']) }}</span>
+                  </span>
+                  <span class="sn-lang-code">{{ strtoupper($localeCode) }}</span>
+                </a>
+              @endforeach
+            </div>
+          </details>
+
+        </div>{{-- /.sn-collapse --}}
+      </div>{{-- /.collapse.navbar-collapse --}}
+
+    </div>
+  </nav>
 </header>

@@ -2,6 +2,9 @@
 
 return [
     'categories' => 'Categories',
+    'categories_subtitle' => 'Explore our wide range of quality products',
+    'latest_news' => 'Latest News',
+    'all_news' => 'All News',
     'products' => 'Products',
     'main_page'=>'Home',
     'back'=>'Back',
@@ -29,6 +32,7 @@ return [
     'loading'=>'loading...',
     'read_more'=>'Read More',
     'message_sent'=>'Your message has been sent successfully',
+    'contact_24h'=>'We will contact you within 24 hours.',
     'lay-in'=>'Lay-in',
     'clip-in'=>'Clip-in',
     'vinil'=>'Vinyl ceiling',

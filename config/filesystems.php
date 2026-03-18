@@ -99,6 +99,20 @@ return [
             'visibility' => 'public',
         ],
 
+        'horses' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/horses'),
+            'url' => env('APP_URL').'/storage/horses',
+            'visibility' => 'public',
+        ],
+
+        'horse_videos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/horse_videos'),
+            'url' => env('APP_URL').'/storage/horse_videos',
+            'visibility' => 'public',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

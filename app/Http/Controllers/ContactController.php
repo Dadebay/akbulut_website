@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -37,6 +38,24 @@ class ContactController extends Controller
             'phone' => $request->get('phone'),
             'body' => $request->get('body')
         ]);
+
+        $name    = $request->get('name');
+        $phone   = $request->get('phone');
+        $body    = $request->get('body');
+        $subject = 'New Contact Message from Akbulut Website';
+        $mailBody = "Name: {$name}\nPhone: {$phone}\n\nMessage:\n{$body}";
+
+        $recipients = [
+            env('CONTACT_MAIL_1', 'info.akbulut.es@gmail.com'),
+            env('CONTACT_MAIL_2', 'dadebaygurbanow333@gmail.com'),
+        ];
+
+        foreach ($recipients as $recipient) {
+            Mail::raw($mailBody, function ($message) use ($recipient, $subject, $name) {
+                $message->to($recipient)
+                        ->subject($subject);
+            });
+        }
 
         return response()->json(['msg' => 'feedback created', 'feedback' => $feedback], 201);
     }

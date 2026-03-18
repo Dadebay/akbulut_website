@@ -139,7 +139,7 @@
 <div class="app-container">
     <div class="horses-grid">
         @foreach($horses as $horse)
-        <a href="{{ route('horse.profile', $horse['id']) }}" class="horse-link">
+        <a href="{{ route('horse.desktop', $horse['id']) }}" class="horse-link">
             <article class="horse-card">
                 <img src="{{ asset('images/all_horses/' . $horse['image']) }}" alt="{{ $horse['name'] }}" class="horse-image">
                 <div class="horse-info">

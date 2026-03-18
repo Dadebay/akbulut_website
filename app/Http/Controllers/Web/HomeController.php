@@ -44,7 +44,10 @@ class HomeController extends Controller
 
     public function aboutUs()
     {
-        $response = Http::withOptions(['verify' => false])->get("{$this->apiBaseUrl}/about_us");
+        $locale = app()->getLocale();
+        $response = Http::withOptions(['verify' => false])
+            ->withHeaders(['Accept-Language' => $locale])
+            ->get("{$this->apiBaseUrl}/about_us", ['lang' => $locale]);
         $aboutUs = $response->successful() ? (object)$response->json('data', []) : null;
         
         return view('site.about.about_us', compact('aboutUs'));
@@ -54,10 +57,14 @@ class HomeController extends Controller
     {
         $page = request('page', 1);
         $perPage = env('perPage', 10);
+        $locale = app()->getLocale();
         
-        $response = Http::withOptions(['verify' => false])->get("{$this->apiBaseUrl}/news", [
+        $response = Http::withOptions(['verify' => false])
+            ->withHeaders(['Accept-Language' => $locale])
+            ->get("{$this->apiBaseUrl}/news", [
             'page' => $page,
-            'per_page' => $perPage
+            'per_page' => $perPage,
+            'lang' => $locale,
         ]);
         
         $newsData = $response->successful() ? $response->json('data', []) : [];
@@ -75,11 +82,16 @@ class HomeController extends Controller
 
     public function showNews($newsId)
     {
-        $response = Http::withOptions(['verify' => false])->get("{$this->apiBaseUrl}/news/{$newsId}");
+        $locale = app()->getLocale();
+        $response = Http::withOptions(['verify' => false])
+            ->withHeaders(['Accept-Language' => $locale])
+            ->get("{$this->apiBaseUrl}/news/{$newsId}", ['lang' => $locale]);
         $news = $response->successful() ? (object)$response->json('data', []) : null;
 
-        // Get random news
-        $topNewsResponse = Http::withOptions(['verify' => false])->get("{$this->apiBaseUrl}/news");
+        // Get related news in same locale
+        $topNewsResponse = Http::withOptions(['verify' => false])
+            ->withHeaders(['Accept-Language' => $locale])
+            ->get("{$this->apiBaseUrl}/news", ['lang' => $locale]);
         $allNews = $topNewsResponse->successful() ? collect($topNewsResponse->json('data', [])) : collect([]);
         $top_news = $allNews->where('id', '!=', $newsId)->random(min(6, $allNews->count()));
 
@@ -91,18 +103,23 @@ class HomeController extends Controller
         $category_id = $request->get('category_id');
         $page = request('page', 1);
         $perPage = env('perPage', 10);
+        $locale = app()->getLocale();
 
-        // Fetch categories from API for sidebar
-        $categoriesResponse = Http::withOptions(['verify' => false])->get("{$this->apiBaseUrl}/categories");
+        // Fetch categories from API for sidebar (with locale)
+        $categoriesResponse = Http::withOptions(['verify' => false])
+            ->withHeaders(['Accept-Language' => $locale])
+            ->get("{$this->apiBaseUrl}/categories", ['lang' => $locale]);
         $categories = $categoriesResponse->successful() ? collect($categoriesResponse->json('data', [])) : collect([]);
 
-        // Fetch products from API
-        $params = ['page' => $page, 'per_page' => $perPage];
+        // Fetch products from API (with locale)
+        $params = ['page' => $page, 'per_page' => $perPage, 'lang' => $locale];
         if ($category_id) {
             $params['category_id'] = $category_id;
         }
 
-        $response = Http::withOptions(['verify' => false])->get("{$this->apiBaseUrl}/products", $params);
+        $response = Http::withOptions(['verify' => false])
+            ->withHeaders(['Accept-Language' => $locale])
+            ->get("{$this->apiBaseUrl}/products", $params);
         $productsData = $response->successful() ? $response->json('data', []) : [];
 
         $products = new LengthAwarePaginator(
@@ -118,7 +135,10 @@ class HomeController extends Controller
 
     public function Privacy()
     {
-        $response = Http::withOptions(['verify' => false])->get("{$this->apiBaseUrl}/privacy");
+        $locale = app()->getLocale();
+        $response = Http::withOptions(['verify' => false])
+            ->withHeaders(['Accept-Language' => $locale])
+            ->get("{$this->apiBaseUrl}/privacy", ['lang' => $locale]);
         $aboutUs = $response->successful() ? (object)$response->json('data', []) : null;
         
         return view('site.privacy', compact('aboutUs'));

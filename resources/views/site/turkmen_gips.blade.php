@@ -3,291 +3,213 @@
 @section('css')
 <style>
     :root {
-        --primary-color: #0a529e;
-        --secondary-color: #144b9d;
-        --accent-color: #ffd700;
-        --accent-glow: #ffed4e;
-        --text-light: #ffffff;
-        --bg-dark: #0f1419;
+        --brand:        #0a529e;
+        --brand-mid:    #1271cc;
+        --brand-light:  #e8f0fb;
+        --brand-lighter:#f0f5ff;
+        --accent:       #f97316;   /* orange – matches the site logo palette */
+        --text-dark:    #1a2340;
+        --text-muted:   #6b7a9a;
+        --border:       #dde6f5;
+        --white:        #ffffff;
+        --shadow-sm:    0 2px 12px rgba(10,82,158,.08);
+        --shadow-md:    0 8px 32px rgba(10,82,158,.13);
+        --shadow-lg:    0 20px 60px rgba(10,82,158,.18);
+        --radius:       16px;
     }
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
+    /* ── Page wrapper ── */
     .turkmen-gips-page {
-        background: linear-gradient(135deg, #0a0e1a 0%, #1a2332 50%, #0f1419 100%);
+        background: #f4f7fc;
         min-height: 100vh;
         overflow-x: hidden;
-        position: relative;
-        padding: 80px 0 60px;
     }
 
-    /* Animated Background */
-    .turkmen-gips-page::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: 
-            radial-gradient(circle at 20% 50%, rgba(10, 82, 158, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 40% 20%, rgba(20, 75, 157, 0.1) 0%, transparent 50%);
-        animation: backgroundShift 20s ease-in-out infinite;
-        pointer-events: none;
-        z-index: 0;
-    }
-
-    @keyframes backgroundShift {
-        0%, 100% { opacity: 0.5; transform: scale(1); }
-        50% { opacity: 0.8; transform: scale(1.1); }
-    }
-
-    /* Hero Section */
+    /* ── Hero banner ── */
     .hero-section {
-        position: relative;
-        z-index: 2;
-        padding: 60px 0 40px;
+        background: linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 60%, #1a8de8 100%);
+        padding: 72px 0 56px;
         text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* subtle geometric pattern overlay */
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+            radial-gradient(circle at 15% 50%, rgba(255,255,255,.06) 0%, transparent 55%),
+            radial-gradient(circle at 85% 20%, rgba(255,255,255,.07) 0%, transparent 50%);
+        pointer-events: none;
     }
 
     .hero-title {
-        font-size: clamp(2.5rem, 8vw, 5rem);
+        font-size: clamp(2rem, 6vw, 3.6rem);
         font-weight: 900;
-        background: linear-gradient(135deg, 
-            var(--accent-color) 0%, 
-            var(--accent-glow) 25%,
-            #fff 50%, 
-            var(--accent-glow) 75%,
-            var(--accent-color) 100%);
-        background-size: 200% auto;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 2rem;
-        animation: shimmerGold 3s linear infinite;
-        text-shadow: 0 0 80px rgba(255, 215, 0, 0.5);
-        filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.6));
-    }
-
-    @keyframes shimmerGold {
-        0% { background-position: 0% center; }
-        100% { background-position: 200% center; }
+        color: #fff;
+        letter-spacing: -.5px;
+        margin-bottom: 1.2rem;
+        position: relative;
     }
 
     .hero-subtitle {
-        font-size: clamp(1.2rem, 3vw, 2rem);
-        color: var(--text-light);
-        margin-bottom: 1.5rem;
-        opacity: 0.95;
-        text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-        font-weight: 600;
-        line-height: 1.6;
-        max-width: 1200px;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 0 20px;
-    }
-
-    /* Carousel Section */
-    .carousel-section {
-        position: relative;
-        z-index: 2;
-        padding: 40px 0;
-    }
-
-    .carousel-container {
-        max-width: 1400px;
+        font-size: clamp(1rem, 2vw, 1.3rem);
+        color: rgba(255,255,255,.85);
+        font-weight: 500;
+        line-height: 1.65;
+        max-width: 900px;
         margin: 0 auto;
         padding: 0 20px;
         position: relative;
     }
 
+    /* ── Carousel section ── */
+    .carousel-section {
+        padding: 48px 0 40px;
+    }
+
+    .carousel-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 24px;
+    }
+
     .carousel-wrapper {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(20px);
-        border-radius: 30px;
-        padding: 40px;
-        box-shadow: 
-            0 20px 60px rgba(0, 0, 0, 0.4),
-            inset 0 0 60px rgba(255, 215, 0, 0.05),
-            0 0 100px rgba(10, 82, 158, 0.2);
-        border: 2px solid rgba(255, 215, 0, 0.2);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .carousel-wrapper::before {
-        content: '';
-        position: absolute;
-        top: -2px;
-        left: -2px;
-        right: -2px;
-        bottom: -2px;
-        background: linear-gradient(45deg, 
-            var(--accent-color), 
-            var(--primary-color), 
-            var(--accent-color));
-        background-size: 400% 400%;
-        border-radius: 30px;
-        z-index: -1;
-        animation: borderGlow 6s ease infinite;
-        opacity: 0.3;
-    }
-
-    @keyframes borderGlow {
-        0%, 100% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
+        background: var(--white);
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border);
     }
 
     .gips-carousel {
-        border-radius: 20px;
+        border-radius: var(--radius);
         overflow: hidden;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     }
 
     .gips-carousel .carousel-item {
-        height: 85vh;
-        min-height: 600px;
-        max-height: 1000px;
-        position: relative;
+        height: 82vh;
+        min-height: 520px;
+        max-height: 900px;
     }
 
     .gips-carousel .carousel-item img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        filter: brightness(1.1) contrast(1.1);
-        transition: transform 0.5s ease;
+        transition: transform .5s ease;
     }
 
     .gips-carousel .carousel-item:hover img {
-        transform: scale(1.05);
+        transform: scale(1.04);
     }
 
-    /* Carousel Controls */
+    /* Carousel controls */
     .carousel-control-prev,
     .carousel-control-next {
-        width: 60px;
-        height: 60px;
-        background: rgba(10, 82, 158, 0.8);
-        backdrop-filter: blur(10px);
+        width: 52px;
+        height: 52px;
+        background: var(--brand);
         border-radius: 50%;
         top: 50%;
         transform: translateY(-50%);
         opacity: 1;
-        transition: all 0.3s ease;
-        border: 2px solid rgba(255, 215, 0, 0.3);
+        transition: background .22s, box-shadow .22s, transform .22s;
+        border: 2px solid rgba(255,255,255,.25);
+        box-shadow: var(--shadow-sm);
     }
-
-    .carousel-control-prev {
-        left: 20px;
-    }
-
-    .carousel-control-next {
-        right: 20px;
-    }
+    .carousel-control-prev { left: 18px; }
+    .carousel-control-next { right: 18px; }
 
     .carousel-control-prev:hover,
     .carousel-control-next:hover {
-        background: rgba(255, 215, 0, 0.9);
-        border-color: rgba(255, 215, 0, 0.8);
-        box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+        background: var(--brand-mid);
+        box-shadow: 0 6px 20px rgba(10,82,158,.4);
+        transform: translateY(-50%) scale(1.08);
     }
 
     .carousel-control-prev-icon,
     .carousel-control-next-icon {
-        width: 30px;
-        height: 30px;
+        width: 24px;
+        height: 24px;
     }
 
-    /* Carousel Indicators */
     .carousel-indicators {
-        bottom: 20px;
+        bottom: 16px;
     }
 
     .carousel-indicators li {
-        width: 12px;
-        height: 12px;
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.5);
-        margin: 0 8px;
-        border: 2px solid rgba(255, 215, 0, 0.3);
-        transition: all 0.3s ease;
+        background: rgba(255,255,255,.5);
+        border: none;
+        margin: 0 5px;
+        transition: all .25s;
     }
 
     .carousel-indicators li.active {
-        background: var(--accent-color);
-        box-shadow: 0 0 20px var(--accent-color);
-        transform: scale(1.3);
+        background: var(--white);
+        width: 24px;
+        border-radius: 4px;
+        box-shadow: 0 0 8px rgba(255,255,255,.6);
     }
 
-    /* Info Section */
+    /* ── Info section ── */
     .info-section {
-        position: relative;
-        z-index: 2;
-        padding: 60px 0;
+        padding: 0 0 64px;
     }
 
     .info-container {
-        max-width: 1200px;
+        max-width: 1100px;
         margin: 0 auto;
-        padding: 0 20px;
+        padding: 0 24px;
     }
 
+    /* Tab buttons */
     .info-tabs {
         display: flex;
         justify-content: center;
-        gap: 20px;
-        margin-bottom: 40px;
+        gap: 10px;
+        margin-bottom: 32px;
         flex-wrap: wrap;
     }
 
     .tab-btn {
-        padding: 15px 40px;
-        font-size: 1.2rem;
+        padding: 11px 32px;
+        font-size: 1rem;
         font-weight: 700;
-        background: rgba(10, 82, 158, 0.3);
-        backdrop-filter: blur(10px);
-        border: 2px solid rgba(255, 215, 0, 0.3);
+        background: var(--white);
+        border: 2px solid var(--border);
         border-radius: 50px;
-        color: var(--text-light);
+        color: var(--text-muted);
         cursor: pointer;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
+        transition: all .22s;
+        letter-spacing: .02em;
+        box-shadow: var(--shadow-sm);
     }
 
-    .tab-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
-        transition: left 0.5s ease;
+    .tab-btn:hover {
+        border-color: var(--brand);
+        color: var(--brand);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
     }
 
-    .tab-btn:hover::before {
-        left: 100%;
-    }
-
-    .tab-btn:hover,
     .tab-btn.active {
-        background: rgba(255, 215, 0, 0.2);
-        border-color: var(--accent-color);
-        box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
-        transform: translateY(-3px);
+        background: linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 100%);
+        border-color: transparent;
+        color: var(--white);
+        box-shadow: 0 6px 20px rgba(10,82,158,.30);
+        transform: translateY(-2px);
     }
 
+    /* Tab content */
     .tab-content {
         display: none;
-        animation: fadeInUp 0.5s ease;
+        animation: fadeInUp .4s ease;
     }
 
     .tab-content.active {
@@ -295,153 +217,137 @@
     }
 
     @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* Info box card */
     .info-box {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(20px);
+        background: var(--white);
         border-radius: 20px;
-        padding: 40px;
-        border: 2px solid rgba(255, 215, 0, 0.2);
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        padding: 48px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-md);
     }
 
     .info-title {
-        font-size: clamp(1.8rem, 4vw, 3rem);
-        color: var(--accent-color);
-        margin-bottom: 30px;
+        font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+        color: var(--brand);
+        margin-bottom: 16px;
         text-align: center;
         font-weight: 900;
-        text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        letter-spacing: -.3px;
     }
 
     .info-subtitle {
-        font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-        color: var(--text-light);
-        margin-bottom: 30px;
-        line-height: 1.6;
+        font-size: clamp(1rem, 2vw, 1.25rem);
+        color: var(--text-muted);
+        margin-bottom: 36px;
+        line-height: 1.7;
         text-align: center;
-        opacity: 0.9;
     }
 
+    /* Section divider inside card */
+    .info-divider {
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--brand-light), transparent);
+        border: none;
+        margin: 32px 0;
+    }
+
+    /* Capacity list */
     .capacity-list {
         list-style: none;
         padding: 0;
-        margin: 30px 0;
+        margin: 24px 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
     }
 
     .capacity-item {
-        font-size: clamp(1.1rem, 2vw, 1.5rem);
-        color: var(--text-light);
-        padding: 20px;
-        margin-bottom: 15px;
-        background: rgba(10, 82, 158, 0.2);
-        border-left: 4px solid var(--accent-color);
-        border-radius: 10px;
+        font-size: clamp(1rem, 1.8vw, 1.2rem);
+        color: var(--text-dark);
+        font-weight: 600;
+        padding: 20px 20px 20px 28px;
+        background: var(--brand-lighter);
+        border-left: 4px solid var(--brand);
+        border-radius: 12px;
         position: relative;
-        transition: all 0.3s ease;
+        transition: transform .22s, box-shadow .22s;
     }
 
     .capacity-item::before {
         content: '✓';
         position: absolute;
-        left: -15px;
+        left: -14px;
         top: 50%;
         transform: translateY(-50%);
-        width: 30px;
-        height: 30px;
-        background: var(--accent-color);
+        width: 28px;
+        height: 28px;
+        background: linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 100%);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: bold;
-        color: var(--bg-dark);
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        font-size: .8rem;
+        font-weight: 900;
+        color: #fff;
+        box-shadow: 0 3px 10px rgba(10,82,158,.35);
     }
 
     .capacity-item:hover {
-        background: rgba(10, 82, 158, 0.3);
-        transform: translateX(10px);
-        box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+        transform: translateX(6px);
+        box-shadow: var(--shadow-sm);
+    }
+
+    /* Highlight badges */
+    .highlight-badges {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 36px;
     }
 
     .highlight-text {
-        font-size: clamp(1.3rem, 2.5vw, 2rem);
-        color: var(--accent-color);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 100%);
+        color: #fff;
+        font-size: clamp(.9rem, 1.6vw, 1.05rem);
+        font-weight: 700;
+        padding: 12px 24px;
+        border-radius: 50px;
+        box-shadow: 0 4px 16px rgba(10,82,158,.25);
+        letter-spacing: .02em;
         text-align: center;
-        margin-top: 30px;
-        font-weight: 800;
-        text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
-        animation: pulse 2s infinite;
+        /* override old pulse animation */
+        animation: none;
     }
 
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.7; }
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .gips-carousel .carousel-item {
-            height: 60vh;
-            min-height: 450px;
-        }
-
-        .carousel-control-prev,
-        .carousel-control-next {
-            width: 45px;
-            height: 45px;
-        }
-
-        .carousel-control-prev {
-            left: 10px;
-        }
-
-        .carousel-control-next {
-            right: 10px;
-        }
-
-        .carousel-wrapper {
-            padding: 20px;
-        }
-
-        .info-box {
-            padding: 25px;
-        }
-
-        .tab-btn {
-            padding: 12px 25px;
-            font-size: 1rem;
-        }
-
-        .capacity-item {
-            padding: 15px 15px 15px 25px;
-        }
-    }
-
-    /* Page Enter Animation */
+    /* Page entrance */
     .animate-enter {
-        animation: pageEnter 1s ease-out;
+        animation: pageEnter .7s ease-out;
     }
 
     @keyframes pageEnter {
-        from {
-            opacity: 0;
-            transform: translateY(50px);
+        from { opacity: 0; transform: translateY(28px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+        .gips-carousel .carousel-item {
+            height: 58vh;
+            min-height: 380px;
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .carousel-control-prev,
+        .carousel-control-next { width: 40px; height: 40px; }
+        .carousel-wrapper { padding: 14px; }
+        .info-box { padding: 28px 20px; }
+        .tab-btn { padding: 10px 22px; font-size: .9rem; }
     }
 </style>
 @endsection
@@ -528,8 +434,10 @@
                         <li class="capacity-item">20 миллионов квадратных метров гипсокартона</li>
                     </ul>
                     
-                    <p class="highlight-text">НОВЕЙШЕЕ ЕВРОПЕЙСКОЕ ОБОРУДОВАНИЕ И ТЕХНОЛОГИИ</p>
-                    <p class="highlight-text">ОТКРЫТИЕ В 2026 ГОДУ.</p>
+                    <div class="highlight-badges">
+                        <p class="highlight-text">НОВЕЙШЕЕ ЕВРОПЕЙСКОЕ ОБОРУДОВАНИЕ И ТЕХНОЛОГИИ</p>
+                        <p class="highlight-text">ОТКРЫТИЕ В 2026 ГОДУ.</p>
+                    </div>
                 </div>
             </div>
 
@@ -545,8 +453,10 @@
                         <li class="capacity-item">20 million square meters of gypsum board</li>
                     </ul>
                     
-                    <p class="highlight-text">LATEST EUROPEAN EQUIPMENT AND TECHNOLOGY</p>
-                    <p class="highlight-text">OPENING IN 2026.</p>
+                    <div class="highlight-badges">
+                        <p class="highlight-text">LATEST EUROPEAN EQUIPMENT AND TECHNOLOGY</p>
+                        <p class="highlight-text">OPENING IN 2026.</p>
+                    </div>
                 </div>
             </div>
 
@@ -562,8 +472,10 @@
                         <li class="capacity-item">20 million inedördül metr gipsokarton</li>
                     </ul>
                     
-                    <p class="highlight-text">IŇ TÄZE ÝEWROPA ENJAMLARY WE TEHNOLOGIÝASY.</p>
-                    <p class="highlight-text">2026-njy ÝYLDA AÇYLÝAR.</p>
+                    <div class="highlight-badges">
+                        <p class="highlight-text">IŇ TÄZE ÝEWROPA ENJAMLARY WE TEHNOLOGIÝASY.</p>
+                        <p class="highlight-text">2026-njy ÝYLDA AÇYLÝAR.</p>
+                    </div>
                 </div>
             </div>
         </div>
