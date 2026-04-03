@@ -44,23 +44,40 @@ class Horse extends Model implements HasMedia
             ->performOnCollections('horse_images');
     }
 
-    /** First image or null */
+    /**
+     * Make a media URL relative so it works on any domain
+     * (local 127.0.0.1 or production server).
+     */
+    private function relativeUrl(string $url): string
+    {
+        $appUrl = rtrim(config('app.url'), '/');
+        if (str_starts_with($url, $appUrl)) {
+            return substr($url, strlen($appUrl));
+        }
+        // Fallback: strip scheme+host from any absolute URL
+        $parsed = parse_url($url);
+        return ($parsed['path'] ?? '/') . (isset($parsed['query']) ? '?' . $parsed['query'] : '');
+    }
+
+    /** First image URL (relative) or null */
     public function getCoverImageUrlAttribute(): ?string
     {
         $media = $this->getFirstMedia('horse_images');
-        return $media ? $media->getUrl('card') : null;
+        return $media ? $this->relativeUrl($media->getUrl()) : null;
     }
 
-    /** All horse images as URL array */
+    /** All image URLs (relative) */
     public function getImageUrlsAttribute(): array
     {
-        return $this->getMedia('horse_images')->map(fn($m) => $m->getUrl())->toArray();
+        return $this->getMedia('horse_images')
+            ->map(fn($m) => $this->relativeUrl($m->getUrl()))
+            ->toArray();
     }
 
-    /** Video URL */
+    /** Video URL (relative) or null */
     public function getVideoUrlAttribute(): ?string
     {
         $media = $this->getFirstMedia('horse_video');
-        return $media ? $media->getUrl() : null;
+        return $media ? $this->relativeUrl($media->getUrl()) : null;
     }
 }

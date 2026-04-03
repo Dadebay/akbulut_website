@@ -2,11 +2,6 @@
 @php
   $navLinks = [
     [
-      'label' => trans('main.turkmen_gips'),
-      'href' => route('turkmen.gips'),
-      'pattern' => '*/turkmen-gips*',
-    ],
-    [
       'label' => trans('main.main_page'),
       'href' => route('web.welcome'),
       'pattern' => '*/welcome*',
@@ -37,6 +32,11 @@
       'label' => trans('main.privacy'),
       'href' => route('web.privacy'),
       'pattern' => '*/privacy*',
+    ],
+    [
+      'label' => trans('main.turkmen_gips'),
+      'href' => route('turkmen.gips'),
+      'pattern' => '*/turkmen-gips*',
     ],
     [
       'label' => trans('main.contact_us'),

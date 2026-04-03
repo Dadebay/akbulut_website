@@ -87,7 +87,6 @@
     @include('inc.footer')
 
 
-
 @endsection
 @section('js')
     <script>

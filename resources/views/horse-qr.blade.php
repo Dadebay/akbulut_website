@@ -1,725 +1,463 @@
-<!DOCTYPE html>
-<html lang="tk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Garagum - Türkmen Aty</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+@extends('layouts.horse')
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Arial', sans-serif;
-            background: #000;
-            color: #fff;
-            overflow-x: hidden;
-        }
+@section('css')
+<style>
+    * { box-sizing: border-box; }
+    body { background: #f7faff; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; }
+    html { scrollbar-width: none; }
+    body::-webkit-scrollbar { display: none; }
 
-        /* App Container */
-        .app-container {
-            max-width: 500px;
-            margin: 0 auto;
-            background: #000;
-            position: relative;
-        }
+    /* ── TikTok-style fullscreen video/image hero ── */
+    .tk-screen {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        min-height: 500px;
+        background: #000;
+        overflow: hidden;
+    }
 
-        /* Top Bar */
-        .top-bar {
-            position: fixed;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            max-width: 500px;
-            width: 100%;
-            z-index: 1000;
-            background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, transparent 100%);
-            padding: 20px 20px 40px;
-        }
+    /* The video itself — covers full viewport */
+    .tk-video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+    }
 
-        .logo {
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-align: center;
-            background: linear-gradient(135deg, #d4af37, #f0d478);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+    /* Fallback image background (no video) */
+    .tk-img-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        opacity: 0.82;
+    }
+    .tk-placeholder-bg {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, #0a1a3a 0%, #0a529e 100%);
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 100px;
+    }
 
-        /* Video Section - Full Screen */
-        .video-section {
-            width: 100%;
-            height: 100vh;
-            position: relative;
-            background: #000;
-        }
+    /* Dark gradient overlay — bottom portion */
+    .tk-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            to bottom,
+            rgba(0,0,0,0.28) 0%,
+            transparent 35%,
+            transparent 50%,
+            rgba(0,0,0,0.72) 80%,
+            rgba(0,0,0,0.92) 100%
+        );
+        z-index: 2;
+        pointer-events: none;
+    }
 
-        .video-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            overflow: hidden;
-        }
+    /* Back button (top-left) */
+    .tk-back {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 10;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: rgba(255,255,255,0.9);
+        background: rgba(0,0,0,0.32);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.18);
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background 0.2s;
+    }
+    .tk-back:hover { background: rgba(0,0,0,0.55); color: #fff; text-decoration: none; }
 
-        .video-container video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
+    /* Mute toggle (top-right) — only when video exists */
+    .tk-mute-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 10;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(0,0,0,0.35);
+        backdrop-filter: blur(8px);
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+    }
+    .tk-mute-btn:hover { background: rgba(0,0,0,0.6); }
 
-        /* Info Overlay */
-        .info-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, transparent 100%);
-            padding: 80px 25px 30px;
-        }
+    /* Horse info — bottom of the viewport */
+    .tk-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 5;
+        padding: 0 20px 52px;
+    }
+    .tk-horse-name {
+        font-size: clamp(2rem, 6vw, 3.2rem);
+        font-weight: 900;
+        color: #fff;
+        margin: 0 0 6px;
+        letter-spacing: -0.5px;
+        text-shadow: 0 2px 16px rgba(0,0,0,0.5);
+        line-height: 1.1;
+    }
+    .tk-horse-breed {
+        font-size: 1rem;
+        color: rgba(255,255,255,0.8);
+        margin: 0 0 14px;
+        font-weight: 500;
+    }
+    .tk-badges {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    .tk-badge {
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.3);
+        color: #fff;
+        font-size: 0.78rem;
+        font-weight: 600;
+        padding: 5px 14px;
+        border-radius: 20px;
+    }
 
-        .horse-name {
-            font-size: 36px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            color: #d4af37;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-            transition: opacity 0.3s ease;
-        }
+    /* Scroll hint arrow */
+    .tk-scroll-hint {
+        position: absolute;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 5;
+        color: rgba(255,255,255,0.6);
+        animation: tkBounce 1.8s infinite;
+        font-size: 22px;
+        line-height: 1;
+    }
+    @keyframes tkBounce {
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(8px); }
+    }
 
-        .horse-breed {
-            font-size: 18px;
-            color: rgba(255,255,255,0.8);
-            margin-bottom: 20px;
-            font-weight: 500;
-            transition: opacity 0.3s ease;
-        }
+    /* ── Info section below the video ── */
+    .hd-body {
+        background: #f7faff;
+        padding: 48px 0 72px;
+    }
+    .hd-grid {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 28px;
+        align-items: start;
+    }
+    .hd-card {
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid rgba(10,82,158,0.09);
+        box-shadow: 0 2px 12px rgba(10,82,158,0.07);
+        padding: 24px 24px 20px;
+        margin-bottom: 20px;
+    }
+    .hd-card-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: #0a529e;
+        margin-bottom: 14px;
+    }
+    .hd-desc {
+        font-size: 0.95rem;
+        line-height: 1.8;
+        color: #374151;
+        margin: 0;
+    }
+    .hd-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+    .hd-stat {
+        text-align: center;
+        background: #f0f5ff;
+        border-radius: 12px;
+        padding: 14px 8px;
+    }
+    .hd-stat-value {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #0a529e;
+        line-height: 1;
+        margin-bottom: 4px;
+    }
+    .hd-stat-label {
+        font-size: 0.68rem;
+        font-weight: 600;
+        color: #5a6a88;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+    }
+    .hd-gallery {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .hd-gallery-item {
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: pointer;
+        aspect-ratio: 4/3;
+        background: #eaf1fb;
+    }
+    .hd-gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.25s ease;
+    }
+    .hd-gallery-item:hover img { transform: scale(1.05); }
 
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
+    /* Lightbox */
+    .hd-lightbox {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.95);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+    .hd-lightbox.active { display: flex; }
+    .hd-lightbox img { max-width: 92vw; max-height: 90vh; border-radius: 10px; }
+    .hd-lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        background: rgba(255,255,255,0.15);
+        border: none;
+        border-radius: 50%;
+        color: #fff;
+        font-size: 22px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        .info-card {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 12px 15px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-        }
+    @media (max-width: 900px) {
+        .hd-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+        .hd-stats { grid-template-columns: repeat(2, 1fr); }
+        .hd-card { padding: 18px 16px; }
+        .tk-info { padding: 0 16px 48px; }
+    }
+</style>
+@endsection
 
-        .info-label {
-            font-size: 11px;
-            color: #d4af37;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-        }
+@section('content')
 
-        .info-value {
-            font-size: 16px;
-            font-weight: 600;
-            color: #fff;
-            transition: opacity 0.3s ease;
-        }
+@php $images = $horse->image_urls; @endphp
 
-        .description {
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-            border-left: 3px solid #d4af37;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 14px;
-            line-height: 1.6;
-            color: rgba(255,255,255,0.9);
-            transition: opacity 0.3s ease;
-        }
+{{-- ── TikTok-style fullscreen hero ── --}}
+<div class="tk-screen">
 
-        /* Video Controls */
-        .video-indicator {
-            position: absolute;
-            top: 90px;
-            left: 20px;
-            right: 20px;
-            display: flex;
-            gap: 8px;
-            z-index: 999;
-        }
+    {{-- VIDEO (if exists) --}}
+    @if($horse->video_url)
+        <video class="tk-video" id="tkVideo" autoplay muted loop playsinline>
+            <source src="{{ $horse->video_url }}" type="video/mp4">
+        </video>
+    {{-- FALLBACK: image --}}
+    @elseif(count($images) > 0)
+        <img src="{{ $images[0] }}"
+             class="tk-img-bg"
+             alt="{{ $horse->name }}"
+             onerror="this.style.display='none';">
+    {{-- FALLBACK: placeholder --}}
+    @else
+        <div class="tk-placeholder-bg">🐴</div>
+    @endif
 
-        .indicator-bar {
-            flex: 1;
-            height: 3px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 2px;
-            overflow: hidden;
-            position: relative;
-            cursor: pointer;
-            transition: height 0.2s ease;
-        }
+    <div class="tk-overlay"></div>
 
-        .indicator-bar:active {
-            height: 4px;
-        }
+    {{-- Back button --}}
+    <a href="{{ route('horses.all') }}" class="tk-back">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Ähli atlar
+    </a>
 
-        .indicator-progress {
-            height: 100%;
-            background: #d4af37;
-            width: 0%;
-            transition: width 0.1s linear;
-        }
+    {{-- Mute toggle (only when video) --}}
+    @if($horse->video_url)
+    <button class="tk-mute-btn" id="tkMuteBtn" onclick="tkToggleMute()" title="Ses">
+        🔇
+    </button>
+    @endif
 
-        .indicator-bar.active .indicator-progress {
-            animation: progress linear;
-        }
-
-        @keyframes progress {
-            from { width: 0%; }
-            to { width: 100%; }
-        }
-
-        /* Gallery Section */
-        .gallery-section {
-            padding: 30px 20px;
-            background: #0a0a0a;
-        }
-
-        .section-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #d4af37;
-            margin-bottom: 20px;
-            text-align: center;
-            letter-spacing: 2px;
-        }
-
-        .gallery-grid {
-            column-count: 2;
-            column-gap: 12px;
-        }
-
-        .gallery-item {
-            break-inside: avoid;
-            margin-bottom: 12px;
-            overflow: hidden;
-            border-radius: 12px;
-            cursor: pointer;
-            position: relative;
-            background: #1a1a1a;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: auto;
-            display: block;
-            transition: transform 0.3s ease;
-        }
-
-        .gallery-item:active {
-            transform: scale(0.98);
-        }
-
-        .gallery-item:active img {
-            transform: scale(1.1);
-        }
-
-        /* Lightbox */
-        .lightbox {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.98);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .lightbox.active {
-            display: flex;
-        }
-
-        .lightbox img {
-            max-width: 95%;
-            max-height: 95%;
-            border-radius: 10px;
-        }
-
-        .lightbox-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: #fff;
-            cursor: pointer;
-            border: none;
-        }
-
-        /* Additional Info Section */
-        .info-section {
-            padding: 30px 20px;
-            background: #000;
-        }
-
-        .info-card-large {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-
-        .info-card-header {
-            font-size: 18px;
-            font-weight: 700;
-            color: #d4af37;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .info-card-header::before {
-            content: '◆';
-            font-size: 12px;
-        }
-
-        .info-card-content {
-            font-size: 15px;
-            line-height: 1.7;
-            color: rgba(255,255,255,0.85);
-            transition: opacity 0.3s ease;
-        }
-
-        .feature-list {
-            list-style: none;
-            padding: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .feature-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .feature-list li:last-child {
-            border-bottom: none;
-        }
-
-        .feature-list li::before {
-            content: '✓';
-            color: #d4af37;
-            font-weight: bold;
-            font-size: 16px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 15px 10px;
-            background: rgba(212, 175, 55, 0.1);
-            border-radius: 10px;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #d4af37;
-            margin-bottom: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .stat-label {
-            font-size: 11px;
-            color: rgba(255,255,255,0.6);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Responsive */
-        @media (min-width: 501px) {
-            .app-container {
-                box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            }
-        }
-
-        @media (max-width: 400px) {
-            .horse-name {
-                font-size: 28px;
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .gallery-grid {
-                column-count: 1;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="app-container">
-        <!-- Top Bar -->
-        <div class="top-bar">
-            <div class="logo">TÜRKMEN ATY</div>
-        </div>
-
-        <!-- Video Section with Story Indicators -->
-        <div class="video-section">
-            <!-- Story-style indicators -->
-            <div class="video-indicator">
-                <div class="indicator-bar" id="indicator-1">
-                    <div class="indicator-progress"></div>
-                </div>
-                <div class="indicator-bar" id="indicator-2">
-                    <div class="indicator-progress"></div>
-                </div>
-                <div class="indicator-bar" id="indicator-3">
-                    <div class="indicator-progress"></div>
-                </div>
-            </div>
-
-            <!-- Video Container -->
-            <div class="video-container">
-                <video id="video-player" playsinline muted>
-                    <source src="/images/horses/1.mp4" type="video/mp4">
-                </video>
-            </div>
-
-            <!-- Info Overlay -->
-            <div class="info-overlay">
-                <div class="horse-name" id="horse-name">GARAGUM</div>
-                <div class="horse-breed" id="horse-breed">Türkmen Bedewi</div>
-
-                <div class="info-grid">
-                    <div class="info-card">
-                        <div class="info-label">Doglan Senesi</div>
-                        <div class="info-value" id="horse-birth">15.08.2018</div>
-                    </div>
-                    <div class="info-card">
-                        <div class="info-label">Boýy</div>
-                        <div class="info-value" id="horse-height">165 SM</div>
-                    </div>
-                    <div class="info-card">
-                        <div class="info-label">Reňki</div>
-                        <div class="info-value" id="horse-color">Gyzyl</div>
-                    </div>
-                    <div class="info-card">
-                        <div class="info-label">Statusy</div>
-                        <div class="info-value" id="horse-status">Häsiýetli</div>
-                    </div>
-                </div>
-
-                <div class="description" id="horse-description">
-                    Garagum özboluşly daşky görnüşi we milli aýratynlyklary bilen tapawutlanýar. Ol Türkmen bedewleriniň arzuw atyçylyk häsiýetlerini özünde jemleýär.
-                </div>
-            </div>
-        </div>
-
-        <!-- Gallery Section -->
-        <div class="gallery-section">
-            <h2 class="section-title">SURAT GALEREÝASY</h2>
-            <div class="gallery-grid">
-                <div class="gallery-item" onclick="openLightbox('/images/horses/1.jpg')">
-                    <img src="/images/horses/1.jpg" alt="Garagum 1">
-                </div>
-                <div class="gallery-item" onclick="openLightbox('/images/horses/2.jpg')">
-                    <img src="/images/horses/2.jpg" alt="Garagum 2">
-                </div>
-                <div class="gallery-item" onclick="openLightbox('/images/horses/3.jpg')">
-                    <img src="/images/horses/3.jpg" alt="Garagum 3">
-                </div>
-                <div class="gallery-item" onclick="openLightbox('/images/horses/4.jpg')">
-                    <img src="/images/horses/4.jpg" alt="Garagum 4">
-                </div>
-                <div class="gallery-item" onclick="openLightbox('/images/horses/5.jpg')">
-                    <img src="/images/horses/5.jpg" alt="Garagum 5">
-                </div>
-            </div>
-        </div>
-
-        <!-- Additional Info Section -->
-        <div class="info-section">
-            <div class="info-card-large">
-                <div class="info-card-header">Häsiýetnama</div>
-                <div class="info-card-content" id="horse-character">
-                    Garagum asuda we dostlukly häsiýete eýe. Ol çalt öwrenýär we mugallymyna gowy gulak asýar. Ýokary derejeli tälim aldy we ýaryşlara taýýar.
-                </div>
-            </div>
-
-            <div class="info-card-large">
-                <div class="info-card-header">Başarnyklarý</div>
-                <ul class="feature-list" id="horse-achievements">
-                    <li>Milli ýaryşda 1-nji orun</li>
-                    <li>200m aralygy 11.2 sekuntda geçýär</li>
-                    <li>Ýokary tizlik we çydamlylyk</li>
-                    <li>Professional türkmen bedewi</li>
-                </ul>
-            </div>
-
-            <div class="info-card-large">
-                <div class="info-card-header">Statistika</div>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-value" id="stat-speed">72</div>
-                        <div class="stat-label">Tizlik km/s</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="stat-competitions">12</div>
-                        <div class="stat-label">Ýaryşlar</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="stat-wins">8</div>
-                        <div class="stat-label">Ýeňişler</div>
-                    </div>
-                </div>
-            </div>
+    {{-- Horse info at bottom --}}
+    <div class="tk-info">
+        <h1 class="tk-horse-name">{{ $horse->name }}</h1>
+        <p class="tk-horse-breed">{{ $horse->breed ?? 'Ahalteke Bedewi' }}</p>
+        <div class="tk-badges">
+            @if($horse->age)    <span class="tk-badge">{{ $horse->age }} ýaş</span> @endif
+            @if($horse->height) <span class="tk-badge">{{ $horse->height }} sm</span> @endif
+            @if($horse->color)  <span class="tk-badge">{{ $horse->color }}</span> @endif
+            @if($horse->gender) <span class="tk-badge">{{ $horse->gender }}</span> @endif
         </div>
     </div>
 
-    <!-- Lightbox -->
-    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-        <button class="lightbox-close">×</button>
-        <img id="lightbox-img" src="" alt="">
+    {{-- Scroll hint --}}
+    <div class="tk-scroll-hint">▾</div>
+</div>
+
+{{-- ── Info section ── --}}
+<section class="hd-body">
+    <div class="container">
+        <div class="hd-grid">
+
+            {{-- Left column --}}
+            <div>
+                {{-- Stats --}}
+                @if($horse->age || $horse->height || $horse->breed)
+                <div class="hd-card">
+                    <p class="hd-card-title">Maglumatlar</p>
+                    <div class="hd-stats">
+                        @if($horse->age)
+                        <div class="hd-stat">
+                            <div class="hd-stat-value">{{ $horse->age }}</div>
+                            <div class="hd-stat-label">Ýaşy (ýyl)</div>
+                        </div>
+                        @endif
+                        @if($horse->height)
+                        <div class="hd-stat">
+                            <div class="hd-stat-value">{{ $horse->height }}</div>
+                            <div class="hd-stat-label">Boýy (sm)</div>
+                        </div>
+                        @endif
+                        @if($horse->breed)
+                        <div class="hd-stat">
+                            <div class="hd-stat-value" style="font-size:0.85rem;">{{ $horse->breed }}</div>
+                            <div class="hd-stat-label">Tohumy</div>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                @endif
+
+                {{-- Description --}}
+                @if($horse->description)
+                <div class="hd-card">
+                    <p class="hd-card-title">Atyň taryhy</p>
+                    <p class="hd-desc">{{ $horse->description }}</p>
+                </div>
+                @endif
+
+                {{-- Gallery --}}
+                @if(count($images) > 0)
+                <div class="hd-card">
+                    <p class="hd-card-title">Surat galereýasy</p>
+                    <div class="hd-gallery">
+                        @foreach($images as $imgUrl)
+                        <div class="hd-gallery-item" onclick="hdOpenLightbox('{{ $imgUrl }}')">
+                            <img src="{{ $imgUrl }}" alt="{{ $horse->name }}">
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+            </div>
+
+            {{-- Right sidebar --}}
+            <div>
+                {{-- Quick info list --}}
+                <div class="hd-card">
+                    <p class="hd-card-title">Häsiýetnamasy</p>
+                    <ul style="list-style:none;padding:0;margin:0;">
+                        @php
+                            $infos = [
+                                'Ady'    => $horse->name,
+                                'Tohumy' => $horse->breed ?? 'Ahalteke Bedewi',
+                                'Ýaşy'  => $horse->age    ? $horse->age    . ' ýyl' : null,
+                                'Boýy'  => $horse->height ? $horse->height . ' sm'  : null,
+                                'Reňki' => $horse->color,
+                                'Jynsy' => $horse->gender,
+                            ];
+                        @endphp
+                        @foreach($infos as $label => $value)
+                            @if($value)
+                            <li style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f0f5ff;font-size:0.88rem;">
+                                <span style="color:#5a6a88;font-weight:600;">{{ $label }}</span>
+                                <span style="color:#0a2560;font-weight:700;">{{ $value }}</span>
+                            </li>
+                            @endif
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+
+        </div>
     </div>
+</section>
 
-    <script>
-        // Horse profiles data
-        const horseProfiles = [
-            {
-                name: 'GARAGUM',
-                breed: 'Türkmen Bedewi',
-                birth: '15.08.2018',
-                height: '165 SM',
-                color: 'Gyzyl',
-                status: 'Häsiýetli',
-                description: 'Garagum özboluşly daşky görnüşi we milli aýratynlyklary bilen tapawutlanýar. Ol Türkmen bedewleriniň arzuw atyçylyk häsiýetlerini özünde jemleýär.',
-                character: 'Garagum asuda we dostlukly häsiýete eýe. Ol çalt öwrenýär we mugallymyna gowy gulak asýar. Ýokary derejeli tälim aldy we ýaryşlara taýýar.',
-                achievements: [
-                    'Milli ýaryşda 1-nji orun',
-                    '200m aralygy 11.2 sekuntda geçýär',
-                    'Ýokary tizlik we çydamlylyk',
-                    'Professional türkmen bedewi'
-                ],
-                stats: { speed: '72', competitions: '12', wins: '8' }
-            },
-            {
-                name: 'ALTYN TARPAN',
-                breed: 'Türkmen Bedewi',
-                birth: '22.04.2019',
-                height: '168 SM',
-                color: 'Ak',
-                status: 'Çempion',
-                description: 'Altyn Tarpan ýiti zehinli we güýçli at. Onuň genetiki nesilnamasy iň gowy türkmen atlaryndan gelýär. Ýokary sypat we häsiýet.',
-                character: 'Altyn Tarpan batyr we çyn häsiýetli at. Ol ýaryşlarda ajaýyp görkeziş görkezýär we hemişe ýeňiş gazanmaga çalyşýar.',
-                achievements: [
-                    'Halkara ýaryşda altyn medal',
-                    '500m aralygy 27.8 sekuntda geçýär',
-                    'Ýylyň iň gowy aty 2023',
-                    'Çempionlyk derejesine eýe'
-                ],
-                stats: { speed: '78', competitions: '18', wins: '14' }
-            },
-            {
-                name: 'ÝAŞYL GÖZÜM',
-                breed: 'Türkmen Bedewi',
-                birth: '10.11.2017',
-                height: '162 SM',
-                color: 'Gara',
-                status: 'Tejribeli',
-                description: 'Ýaşyl Gözüm tejribeli we akylly at. Köp ýyllaryň dowamynda ýaryşlarda şöhrat gazandy. Uly hormat we sarpa mynasyp at.',
-                character: 'Sabyrsyzlyk we çydamlylyk onuň esasy häsiýeti. Ýaşyl Gözüm ähli şertlere çalt uýgunlaşýar we özboluşly şahsyýete eýe.',
-                achievements: [
-                    '5 ýyldan gowrak ýaryş tejribesi',
-                    'Köp sanly ýeňiş we rekordlar',
-                    'Döwlet baýraklary bilen sylaglanan',
-                    'Nesil ýörediji hökmünde tanalýar'
-                ],
-                stats: { speed: '68', competitions: '24', wins: '16' }
-            }
-        ];
+{{-- Lightbox --}}
+<div class="hd-lightbox" id="hdLightbox" onclick="hdCloseLightbox()">
+    <button class="hd-lightbox-close" onclick="hdCloseLightbox()">×</button>
+    <img id="hdLightboxImg" src="" alt="">
+</div>
 
-        // Video playlist
-        const videos = [
-            '/images/horses/1.mp4',
-            '/images/horses/2.mp4',
-            '/images/horses/3.mp4'
-        ];
+@endsection
 
-        let currentVideoIndex = 0;
-        const videoPlayer = document.getElementById('video-player');
-        const indicators = [
-            document.getElementById('indicator-1'),
-            document.getElementById('indicator-2'),
-            document.getElementById('indicator-3')
-        ];
+@section('js')
+<script>
+// Mute/unmute toggle for TikTok video
+var tkMuted = true;
+function tkToggleMute() {
+    var v = document.getElementById('tkVideo');
+    var btn = document.getElementById('tkMuteBtn');
+    if (!v) return;
+    tkMuted = !tkMuted;
+    v.muted = tkMuted;
+    btn.textContent = tkMuted ? '🔇' : '🔊';
+}
 
-        // Update UI with horse profile
-        function updateHorseInfo(index) {
-            const profile = horseProfiles[index];
-            
-            document.getElementById('horse-name').textContent = profile.name;
-            document.getElementById('horse-breed').textContent = profile.breed;
-            document.getElementById('horse-birth').textContent = profile.birth;
-            document.getElementById('horse-height').textContent = profile.height;
-            document.getElementById('horse-color').textContent = profile.color;
-            document.getElementById('horse-status').textContent = profile.status;
-            document.getElementById('horse-description').textContent = profile.description;
-            document.getElementById('horse-character').textContent = profile.character;
-            
-            // Update achievements list
-            const achievementsList = document.getElementById('horse-achievements');
-            achievementsList.innerHTML = profile.achievements.map(a => `<li>${a}</li>`).join('');
-            
-            // Update stats
-            document.getElementById('stat-speed').textContent = profile.stats.speed;
-            document.getElementById('stat-competitions').textContent = profile.stats.competitions;
-            document.getElementById('stat-wins').textContent = profile.stats.wins;
-        }
-
-        // Play video function
-        function playVideo(index) {
-            currentVideoIndex = index;
-            videoPlayer.src = videos[index];
-            
-            // Update horse info
-            updateHorseInfo(index);
-            
-            // Reset all indicators
-            indicators.forEach((ind, i) => {
-                ind.classList.remove('active');
-                const progress = ind.querySelector('.indicator-progress');
-                progress.style.width = '0%';
-                progress.style.animation = 'none';
-                if (i < index) {
-                    progress.style.width = '100%';
-                }
-            });
-
-            // Activate current indicator
-            indicators[index].classList.add('active');
-            const currentProgress = indicators[index].querySelector('.indicator-progress');
-            
-            // Load and play
-            videoPlayer.load();
-            videoPlayer.play().catch(err => {
-                console.log('Autoplay prevented:', err);
-            });
-
-            // Animate progress bar
-            videoPlayer.addEventListener('loadedmetadata', function() {
-                const duration = videoPlayer.duration * 1000; // Convert to ms
-                currentProgress.style.animation = `progress ${duration}ms linear`;
-            }, { once: true });
-        }
-
-        // When video ends, play next
-        videoPlayer.addEventListener('ended', function() {
-            const nextIndex = (currentVideoIndex + 1) % videos.length;
-            playVideo(nextIndex);
-        });
-
-        // Start playing first video when page loads
-        window.addEventListener('load', function() {
-            playVideo(0);
-        });
-
-        // Handle user interaction to enable unmuted playback
-        document.addEventListener('click', function() {
-            if (videoPlayer.muted) {
-                videoPlayer.muted = false;
-            }
-        }, { once: true });
-
-        // Swipe to change video
-        let touchStartX = 0;
-        let touchEndX = 0;
-        const videoSection = document.querySelector('.video-section');
-
-        videoSection.addEventListener('touchstart', function(e) {
-            touchStartX = e.touches[0].clientX;
-        }, { passive: true });
-
-        videoSection.addEventListener('touchend', function(e) {
-            touchEndX = e.changedTouches[0].clientX;
-            handleSwipe();
-        }, { passive: true });
-
-        function handleSwipe() {
-            const swipeThreshold = 50; // Minimum distance for swipe
-            const diff = touchStartX - touchEndX;
-
-            if (Math.abs(diff) > swipeThreshold) {
-                if (diff > 0) {
-                    // Swiped left - next video
-                    const nextIndex = (currentVideoIndex + 1) % videos.length;
-                    playVideo(nextIndex);
-                } else {
-                    // Swiped right - previous video
-                    const prevIndex = (currentVideoIndex - 1 + videos.length) % videos.length;
-                    playVideo(prevIndex);
-                }
-            }
-        }
-
-        // Click on indicator bars to jump to video
-        indicators.forEach((indicator, index) => {
-            indicator.addEventListener('click', function() {
-                playVideo(index);
-            });
-        });
-
-        // Lightbox functions
-        function openLightbox(src) {
-            document.getElementById('lightbox').classList.add('active');
-            document.getElementById('lightbox-img').src = src;
-        }
-
-        function closeLightbox() {
-            document.getElementById('lightbox').classList.remove('active');
-        }
-
-        // Close lightbox with ESC key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeLightbox();
-            }
-        });
-    </script>
-</body>
-</html>
+// Lightbox
+function hdOpenLightbox(src) {
+    document.getElementById('hdLightbox').classList.add('active');
+    document.getElementById('hdLightboxImg').src = src;
+}
+function hdCloseLightbox() {
+    document.getElementById('hdLightbox').classList.remove('active');
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') hdCloseLightbox();
+});
+</script>
+@endsection

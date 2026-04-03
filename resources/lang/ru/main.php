@@ -54,7 +54,7 @@ return [
     'years_of_excellence'=>'Лет Совершенства',
     'employees'=>'Сотрудников',
     'countries'=>'Стран',
-    'products'=>'Продуктов',
+    'products'=>'Продукты',
     'years_of_stability'=>'Лет стабильности в производстве и рабочих процессах',
     'countries_in_export'=>'Стран в экспорте',
     

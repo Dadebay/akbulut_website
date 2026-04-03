@@ -24,6 +24,8 @@
 
 
     <style>
+        html { scrollbar-width: none; }
+        body::-webkit-scrollbar { display: none; }
 
         .carousel-item{
             aspect-ratio: 16/7;

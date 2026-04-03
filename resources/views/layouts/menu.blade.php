@@ -27,6 +27,13 @@
 </li>
 
 <li class="nav-item">
+    <a href="{{ route('horses.index') }}" class="nav-link {{ request()->is('admin/horses*') ? 'active' : '' }}">
+        
+        <p>Atlar</p>
+    </a>
+</li>
+
+<li class="nav-item">
     <a href="{{route('galleries.index')}}"
        class="nav-link {{ request()->is('admin/galleries*') ? 'active' : '' }}">
         

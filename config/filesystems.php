@@ -108,8 +108,8 @@ return [
 
         'horse_videos' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/horse_videos'),
-            'url' => env('APP_URL').'/storage/horse_videos',
+            'root' => storage_path('app/public/horses'),
+            'url' => env('APP_URL').'/storage/horses',
             'visibility' => 'public',
         ],
 
@@ -138,7 +138,16 @@ return [
     */
 
     'links' => [
-        public_path('storage') => storage_path('app/public'),
+        // Individual per-disk symlinks (works even when public/storage is a real directory)
+        public_path('storage/categories')       => storage_path('app/public/categories'),
+        public_path('storage/category_sliders') => storage_path('app/public/category_sliders'),
+        public_path('storage/home_sliders')     => storage_path('app/public/home_sliders'),
+        public_path('storage/news')             => storage_path('app/public/news'),
+        public_path('storage/catalog')          => storage_path('app/public/catalog'),
+        public_path('storage/galleries')        => storage_path('app/public/galleries'),
+        public_path('storage/products')         => storage_path('app/public/products'),
+        public_path('storage/product_sliders')  => storage_path('app/public/product_sliders'),
+        public_path('storage/horses')           => storage_path('app/public/horses'),
     ],
 
 ];
